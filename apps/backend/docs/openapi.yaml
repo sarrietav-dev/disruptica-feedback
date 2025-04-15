@@ -367,3 +367,154 @@ paths:
           description: Category deleted successfully.
         "500":
           description: Internal server error.
+
+  /api/v1/feedback:
+    post:
+      summary: Submit feedback
+      description: Allows users to submit feedback.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: ID of the user submitting the feedback
+                message:
+                  type: string
+                  description: Feedback message
+                rating:
+                  type: integer
+                  description: Rating provided by the user (1-5)
+                  minimum: 1
+                  maximum: 5
+              required:
+                - userId
+                - message
+                - rating
+      responses:
+        "201":
+          description: Feedback submitted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 201
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID of the created feedback
+                      userId:
+                        type: string
+                        description: ID of the user who submitted the feedback
+                      message:
+                        type: string
+                        description: Feedback message
+                      rating:
+                        type: integer
+                        description: Rating provided by the user
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Timestamp of feedback creation
+        "400":
+          description: Validation error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 400
+                  error:
+                    type: string
+                    example: Validation error
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  error:
+                    type: string
+                    example: Internal server error
+
+  /api/v1/feedback/{id}:
+    get:
+      summary: Get feedback by ID
+      description: Retrieves feedback details by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the feedback
+      responses:
+        "200":
+          description: Feedback retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: ID of the feedback
+                      userId:
+                        type: string
+                        description: ID of the user who submitted the feedback
+                      message:
+                        type: string
+                        description: Feedback message
+                      rating:
+                        type: integer
+                        description: Rating provided by the user
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Timestamp of feedback creation
+        "404":
+          description: Feedback not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  error:
+                    type: string
+                    example: Feedback not found
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 500
+                  error:
+                    type: string
+                    example: Internal server error
