@@ -1,8 +1,6 @@
-import { PrismaClient } from "@/generated/prisma";
+import { db, products } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
-import { Product } from "./product-model";
-
-const prisma = new PrismaClient();
+import { eq } from "drizzle-orm";
 
 export class ProductController {
   async createProduct(
@@ -10,14 +8,12 @@ export class ProductController {
     categoryId: string
   ): Promise<Result<string, string>> {
     try {
-      const product = await prisma.product.create({
-        data: {
-          name,
-          categoryId,
-        },
+      const result = await db.insert(products).values({
+        name,
+        categoryId,
       });
 
-      if (!product) {
+      if (!result) {
         return err("Product creation failed");
       }
 
@@ -28,32 +24,33 @@ export class ProductController {
     }
   }
 
-  async getAllProducts(): Promise<Result<Product[], string>> {
+  async getAllProducts(): Promise<Result<any[], string>> {
     try {
-      const products = await prisma.product.findMany();
+      const allProducts = await db.select().from(products);
 
-      if (!products) {
+      if (!allProducts) {
         return err("No products found");
       }
 
-      return ok(products);
+      return ok(allProducts);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");
     }
   }
 
-  async getProductById(productId: string): Promise<Result<Product, string>> {
+  async getProductById(productId: string): Promise<Result<any, string>> {
     try {
-      const product = await prisma.product.findUnique({
-        where: { id: productId },
-      });
+      const product = await db
+        .select()
+        .from(products)
+        .where(eq(products.id, productId));
 
-      if (!product) {
+      if (!product || product.length === 0) {
         return err("Product not found");
       }
 
-      return ok(product);
+      return ok(product[0]);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");
@@ -65,12 +62,12 @@ export class ProductController {
     data: { name?: string; description?: string; price?: number }
   ): Promise<Result<string, string>> {
     try {
-      const product = await prisma.product.update({
-        where: { id: productId },
-        data,
-      });
+      const result = await db
+        .update(products)
+        .set(data)
+        .where(eq(products.id, productId));
 
-      if (!product) {
+      if (!result) {
         return err("Product update failed");
       }
 
@@ -83,11 +80,11 @@ export class ProductController {
 
   async deleteProduct(productId: string): Promise<Result<string, string>> {
     try {
-      const product = await prisma.product.delete({
-        where: { id: productId },
-      });
+      const result = await db
+        .delete(products)
+        .where(eq(products.id, productId));
 
-      if (!product) {
+      if (!result) {
         return err("Product deletion failed");
       }
 

@@ -1,10 +1,9 @@
-import { JWT_SECRET } from "@/config/env";
+import { db, users } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-const prisma = new PrismaClient();
+import { JWT_SECRET } from "@/config/env";
+import { eq } from "drizzle-orm";
 
 export class AuthController {
   async signUp(
@@ -14,20 +13,18 @@ export class AuthController {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-        },
+      const result = await db.insert(users).values({
+        email,
+        password: hashedPassword,
       });
 
-      if (!user) {
+      if (!result) {
         return err("User creation failed");
       }
 
       return ok("User created successfully");
     } catch (error) {
-      console.log('error', error)
+      console.log("error", error);
       return err("Internal server error");
     }
   }
@@ -37,29 +34,29 @@ export class AuthController {
     password: string
   ): Promise<Result<string, string>> {
     try {
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
+      const user = await db.select().from(users).where(eq(users.email, email));
 
-      if (!user) {
+      if (!user || user.length === 0) {
         return err("User not found");
       }
 
-      const isPasswordValid = await bcrypt.compare(password, user.password);
+      const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
       if (!isPasswordValid) {
         return err("Invalid password");
       }
 
-
-      const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET ?? "secret", {
-        expiresIn: "1h",
-      });
-
+      const token = jwt.sign(
+        { id: user[0].id, email: user[0].email },
+        JWT_SECRET ?? "secret",
+        {
+          expiresIn: "1h",
+        }
+      );
 
       return ok(token);
     } catch (error) {
-      console.log('error', error)
+      console.log("error", error);
       return err("Internal server error");
     }
   }

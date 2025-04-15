@@ -4,6 +4,6 @@ export interface Feedback {
   productId: string;
   rating: number;
   comment: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

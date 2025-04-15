@@ -1,8 +1,7 @@
-import { PrismaClient } from "@/generated/prisma";
+import { db, feedback } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
 import { Feedback } from "./feedback-model";
-
-const prisma = new PrismaClient();
+import { eq } from "drizzle-orm";
 
 export class FeedbackController {
   async createFeedback(
@@ -12,16 +11,14 @@ export class FeedbackController {
     productId: string
   ): Promise<Result<string, string>> {
     try {
-      const feedback = await prisma.feedback.create({
-        data: {
-          userId,
-          productId,
-          comment,
-          rating,
-        },
+      const result = await db.insert(feedback).values({
+        userId,
+        productId,
+        comment,
+        rating,
       });
 
-      if (!feedback) {
+      if (!result) {
         return err("Feedback creation failed");
       }
 
@@ -34,9 +31,9 @@ export class FeedbackController {
 
   async getAllFeedback(): Promise<Result<Feedback[], string>> {
     try {
-      const feedbacks = await prisma.feedback.findMany();
+      const feedbacks = await db.select().from(feedback);
 
-      if (!feedbacks) {
+      if (!feedbacks || feedbacks.length === 0) {
         return err("No feedback found");
       }
 
@@ -49,15 +46,16 @@ export class FeedbackController {
 
   async getFeedbackById(feedbackId: string): Promise<Result<Feedback, string>> {
     try {
-      const feedback = await prisma.feedback.findUnique({
-        where: { id: feedbackId },
-      });
+      const feedbackItems = await db
+        .select()
+        .from(feedback)
+        .where(eq(feedback.id, feedbackId));
 
-      if (!feedback) {
+      if (!feedbackItems || feedbackItems.length === 0) {
         return err("Feedback not found");
       }
 
-      return ok(feedback);
+      return ok(feedbackItems[0]);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");
@@ -66,15 +64,15 @@ export class FeedbackController {
 
   async updateFeedback(
     feedbackId: string,
-    data: { comment?: string, rating?: number }
+    data: { comment?: string; rating?: number }
   ): Promise<Result<string, string>> {
     try {
-      const feedback = await prisma.feedback.update({
-        where: { id: feedbackId },
-        data,
-      });
+      const result = await db
+        .update(feedback)
+        .set(data)
+        .where(eq(feedback.id, feedbackId));
 
-      if (!feedback) {
+      if (!result) {
         return err("Feedback update failed");
       }
 
@@ -87,11 +85,11 @@ export class FeedbackController {
 
   async deleteFeedback(feedbackId: string): Promise<Result<string, string>> {
     try {
-      const feedback = await prisma.feedback.delete({
-        where: { id: feedbackId },
-      });
+      const result = await db
+        .delete(feedback)
+        .where(eq(feedback.id, feedbackId));
 
-      if (!feedback) {
+      if (!result) {
         return err("Feedback deletion failed");
       }
 

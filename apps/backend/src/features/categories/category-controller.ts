@@ -1,19 +1,15 @@
+import { categories, db } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
-import { Category } from "./category-model";
-import { PrismaClient } from "@/generated/prisma";
-
-const prisma = new PrismaClient();
+import { eq } from "drizzle-orm";
 
 export class CategoryController {
   async createCategory(name: string): Promise<Result<string, string>> {
     try {
-      const category = await prisma.category.create({
-        data: {
-          name,
-        },
+      const result = await db.insert(categories).values({
+        name,
       });
 
-      if (!category) {
+      if (!result) {
         return err("Category creation failed");
       }
 
@@ -24,17 +20,18 @@ export class CategoryController {
     }
   }
 
-  async getCategoryById(categoryId: string): Promise<Result<Category, string>> {
+  async getCategoryById(categoryId: string): Promise<Result<any, string>> {
     try {
-      const category = await prisma.category.findUnique({
-        where: { id: categoryId },
-      });
+      const category = await db
+        .select()
+        .from(categories)
+        .where(eq(categories.id, categoryId));
 
-      if (!category) {
+      if (!category || category.length === 0) {
         return err("Category not found");
       }
 
-      return ok(category);
+      return ok(category[0]);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");
@@ -46,12 +43,12 @@ export class CategoryController {
     data: { name?: string; description?: string }
   ): Promise<Result<string, string>> {
     try {
-      const category = await prisma.category.update({
-        where: { id: categoryId },
-        data,
-      });
+      const result = await db
+        .update(categories)
+        .set(data)
+        .where(eq(categories.id, categoryId));
 
-      if (!category) {
+      if (!result) {
         return err("Category update failed");
       }
 
@@ -64,11 +61,11 @@ export class CategoryController {
 
   async deleteCategory(categoryId: string): Promise<Result<string, string>> {
     try {
-      const category = await prisma.category.delete({
-        where: { id: categoryId },
-      });
+      const result = await db
+        .delete(categories)
+        .where(eq(categories.id, categoryId));
 
-      if (!category) {
+      if (!result) {
         return err("Category deletion failed");
       }
 
@@ -79,15 +76,15 @@ export class CategoryController {
     }
   }
 
-  async getAllCategories(): Promise<Result<Category[], string>> {
+  async getAllCategories(): Promise<Result<any[], string>> {
     try {
-      const categories = await prisma.category.findMany();
+      const allCategories = await db.select().from(categories);
 
-      if (!categories) {
+      if (!allCategories) {
         return err("No categories found");
       }
 
-      return ok(categories);
+      return ok(allCategories);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");
