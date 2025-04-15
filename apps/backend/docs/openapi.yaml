@@ -5,6 +5,7 @@ info:
   version: 1.0.0
 paths:
   /api/v1/auth/sign-up:
+    x-tag: Authentication
     post:
       summary: User Sign-Up
       description: Creates a new user account.
@@ -62,6 +63,7 @@ paths:
                     example: Internal server error
 
   /api/v1/auth/sign-in:
+    x-tag: Authentication
     post:
       summary: User Sign-In
       description: Authenticates a user and returns a token in an HTTP-only cookie.
@@ -127,6 +129,7 @@ paths:
                     example: Internal server error
 
   /api/v1/products:
+    x-tag: Products
     get:
       summary: Get all products
       description: Retrieves a list of all products.
@@ -185,6 +188,7 @@ paths:
           description: Internal server error.
 
   /api/v1/products/{id}:
+    x-tag: Products
     get:
       summary: Get product by ID
       description: Retrieves a product by its ID.
@@ -251,6 +255,7 @@ paths:
           description: Internal server error.
 
   /api/v1/categories:
+    x-tag: Categories
     get:
       summary: Get all categories
       description: Retrieves a list of all categories.
@@ -303,6 +308,7 @@ paths:
           description: Internal server error.
 
   /api/v1/categories/{id}:
+    x-tag: Categories
     get:
       summary: Get category by ID
       description: Retrieves a category by its ID.
@@ -369,6 +375,7 @@ paths:
           description: Internal server error.
 
   /api/v1/feedback:
+    x-tag: Feedback
     post:
       summary: Submit feedback
       description: Allows users to submit feedback.
@@ -451,7 +458,46 @@ paths:
                     type: string
                     example: Internal server error
 
+    get:
+      summary: Get all feedback
+      description: Retrieves a list of all feedback entries.
+      responses:
+        "200":
+          description: Feedback retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: UUID of the feedback
+                        userId:
+                          type: string
+                          description: UUID of the user who submitted the feedback
+                        message:
+                          type: string
+                          description: Feedback message
+                        rating:
+                          type: integer
+                          description: Rating provided by the user
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: Timestamp of feedback creation
+        "500":
+          description: Internal server error.
+
   /api/v1/feedback/{id}:
+    x-tag: Feedback
     get:
       summary: Get feedback by ID
       description: Retrieves feedback details by its ID.
@@ -518,3 +564,74 @@ paths:
                   error:
                     type: string
                     example: Internal server error
+
+    put:
+      summary: Update feedback
+      description: Updates feedback details by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Updated feedback message
+                rating:
+                  type: integer
+                  description: Updated rating (1-5)
+              required:
+                - message
+      responses:
+        "200":
+          description: Feedback updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Feedback updated successfully
+        "400":
+          description: Validation error.
+        "500":
+          description: Internal server error.
+
+    delete:
+      summary: Delete feedback
+      description: Deletes feedback by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the feedback
+      responses:
+        "200":
+          description: Feedback deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  message:
+                    type: string
+                    example: Feedback deleted successfully
+        "500":
+          description: Internal server error.
