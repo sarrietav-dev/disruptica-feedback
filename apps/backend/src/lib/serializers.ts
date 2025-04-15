@@ -1,14 +1,14 @@
 export function response(data: any, status: number) {
   return {
-    statusCode: status,
-    data: JSON.stringify(data),
+    status: status,
+    data: data,
   };
 }
 
 export function error(message: string, status: number) {
   return {
-    statusCode: status,
-    error: JSON.stringify({ message }),
+    status: status,
+    error: message,
   };
 }
 

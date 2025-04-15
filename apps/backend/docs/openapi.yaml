@@ -219,3 +219,121 @@ paths:
           description: Product deleted successfully.
         "500":
           description: Internal server error.
+
+  /api/v1/categories:
+    get:
+      summary: Get all categories
+      description: Retrieves a list of all categories.
+      responses:
+        "200":
+          description: Categories retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: UUID of the category
+                        name:
+                          type: string
+                          description: Name of the category
+        "500":
+          description: Internal server error.
+
+    post:
+      summary: Create a new category
+      description: Creates a new category with the provided name.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the category
+              required:
+                - name
+      responses:
+        "201":
+          description: Category created successfully.
+        "400":
+          description: Validation error.
+        "500":
+          description: Internal server error.
+
+  /api/v1/categories/{id}:
+    get:
+      summary: Get category by ID
+      description: Retrieves a category by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the category
+      responses:
+        "200":
+          description: Category retrieved successfully.
+        "404":
+          description: Category not found.
+        "500":
+          description: Internal server error.
+
+    put:
+      summary: Update a category
+      description: Updates a category's details by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Updated name of the category
+                description:
+                  type: string
+                  description: Updated description of the category
+      responses:
+        "200":
+          description: Category updated successfully.
+        "400":
+          description: Validation error.
+        "500":
+          description: Internal server error.
+
+    delete:
+      summary: Delete a category
+      description: Deletes a category by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the category
+      responses:
+        "200":
+          description: Category deleted successfully.
+        "500":
+          description: Internal server error.
