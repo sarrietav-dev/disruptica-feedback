@@ -1,5 +1,6 @@
+import { PrismaClient } from "@/generated/prisma";
 import { Result, err, ok } from "@/lib/result";
-import { PrismaClient } from "@prisma/client";
+import { Product } from "./product-model";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +28,22 @@ export class ProductController {
     }
   }
 
-  async getProductById(productId: string): Promise<Result<any, string>> {
+  async getAllProducts(): Promise<Result<Product[], string>> {
+    try {
+      const products = await prisma.product.findMany();
+
+      if (!products) {
+        return err("No products found");
+      }
+
+      return ok(products);
+    } catch (error) {
+      console.log("error", error);
+      return err("Internal server error");
+    }
+  }
+
+  async getProductById(productId: string): Promise<Result<Product, string>> {
     try {
       const product = await prisma.product.findUnique({
         where: { id: productId },

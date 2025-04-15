@@ -30,6 +30,16 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
   return res.status(201).json(created(result.value));
 });
 
+router.get("/", async (req: Request, res: Response): Promise<any> => {
+  const result = await productController.getAllProducts();
+
+  if (isErr(result)) {
+    return res.status(500).json(internalServerError(result.error));
+  }
+
+  return res.status(200).json(ok(result.value));
+});
+
 router.get("/:id", async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
 

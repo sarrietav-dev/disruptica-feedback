@@ -127,6 +127,36 @@ paths:
                     example: Internal server error
 
   /api/v1/products:
+    get:
+      summary: Get all products
+      description: Retrieves a list of all products.
+      responses:
+        "200":
+          description: Products retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: UUID of the product
+                        name:
+                          type: string
+                          description: Name of the product
+                        categoryId:
+                          type: string
+                          description: UUID of the category
+        "500":
+          description: Internal server error.
     post:
       summary: Create a new product
       description: Creates a new product with the provided name and category ID.
