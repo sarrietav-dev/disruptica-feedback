@@ -7,5 +7,6 @@ export default [
         index("./routes/products/index.tsx"),
         route("new", "./routes/products/new.tsx"),
         route(":productId/edit", "./routes/products/edit.tsx"),
+        route(":productId", "./routes/products/show.tsx"),
     ])
 ] satisfies RouteConfig;
