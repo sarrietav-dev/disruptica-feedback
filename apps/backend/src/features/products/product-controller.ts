@@ -1,6 +1,6 @@
-import { db, products } from "@/db/schema";
+import { db, feedback, products } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
-import { eq } from "drizzle-orm";
+import { avg, eq } from "drizzle-orm";
 import { Product } from "./product-model";
 
 export class ProductController {
@@ -40,12 +40,26 @@ export class ProductController {
     }
   }
 
-  async getProductById(productId: string): Promise<Result<any, string>> {
+  async getProductById(
+    productId: string
+  ): Promise<
+    Result<
+      Omit<Product, "updatedAt" | "createdAt"> & { feedbackAvg: string | null },
+      string
+    >
+  > {
     try {
       const product = await db
-        .select()
+        .select({
+          feedbackAvg: avg(feedback.rating),
+          id: products.id,
+          name: products.name,
+          categoryId: products.categoryId,
+        })
         .from(products)
-        .where(eq(products.id, productId));
+        .leftJoin(feedback, eq(products.id, feedback.productId))
+        .where(eq(products.id, productId))
+        .groupBy(products.id);
 
       if (!product || product.length === 0) {
         return err("Product not found");
@@ -95,6 +109,23 @@ export class ProductController {
       }
 
       return ok("Product deleted successfully");
+    } catch (error) {
+      console.log("error", error);
+      return err("Internal server error");
+    }
+  }
+
+  async getFeedbackByProductId(productId: string) {
+    try {
+      const result = await db.query.feedback.findMany({
+        where: eq(feedback.productId, productId),
+      });
+
+      if (!result) {
+        return err("Product feedback not found");
+      }
+
+      return ok(result);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");

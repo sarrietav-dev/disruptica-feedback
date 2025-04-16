@@ -16,8 +16,16 @@ export const formSchema = z.object({
 
 export type FeedbackFormValues = z.infer<typeof formSchema>;
 
-export default async function createFeedback(values: FeedbackFormValues) {
-  const { data } = await api.post<ApiResponse<void>>("/feedback", values);
+export default async function createFeedback(
+  productId: string,
+  userId: string,
+  values: FeedbackFormValues
+) {
+  const { data } = await api.post<ApiResponse<void>>("/feedback", {
+    ...values,
+    productId,
+    userId,
+  });
 
   if (data.status === "error") {
     return err(data.error);

@@ -52,6 +52,21 @@ router.get("/:id", async (req: Request, res: Response): Promise<any> => {
   return res.status(200).json(ok(result.value));
 });
 
+router.get(
+  "/:id/feedback",
+  async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
+
+    const result = await productController.getFeedbackByProductId(id);
+
+    if (isErr(result)) {
+      return res.status(404).json(notFound(result.error));
+    }
+
+    return res.status(200).json(ok(result.value));
+  }
+);
+
 const updateProductSchema = z.object({
   name: z.string().min(1).optional(),
   categoryId: z.string().uuid().optional(),

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import {
+  Form,
   FormField,
   FormItem,
   FormLabel,
@@ -37,10 +38,20 @@ export default function FeedbackForm({ productId }: FeedbackFormProps) {
     },
   });
 
+  const rating = form.watch("rating");
+
+  useEffect(() => {
+    console.log("rating", rating);
+  }, [rating]);
+
   async function onSubmit(values: FeedbackFormValues) {
     setIsSubmitting(true);
     try {
-      const response = await createFeedback(values);
+      const response = await createFeedback(
+        productId,
+        "4d4e11ad-aa35-43b8-a0d7-b51163025112",
+        values
+      );
 
       if (isErr(response)) {
         toast.error("Error", {
@@ -54,6 +65,8 @@ export default function FeedbackForm({ productId }: FeedbackFormProps) {
       });
 
       navigate(`/products/${productId}`);
+
+      form.reset();
     } catch (error) {
       toast.error("Error", {
         description: "Something went wrong. Please try again.",

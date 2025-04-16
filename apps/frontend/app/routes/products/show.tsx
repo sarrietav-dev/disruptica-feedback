@@ -10,6 +10,7 @@ import { ProductRating } from "~/features/products/components/product-rating";
 import FeedbackForm from "~/features/feedback/components/feedback-form";
 import { FeedbackList } from "~/features/feedback/components/feedback-list";
 import type { Feedback } from "~/features/feedback/types/feedback";
+import getFeedbackByProductId from "~/features/products/api/get-feedback-by-product";
 
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const product = await getProduct(params.productId);
@@ -18,8 +19,15 @@ export async function clientLoader({ params }: Route.LoaderArgs) {
     throw new Response("Error loading products", { status: 500 });
   }
 
+  const feedback = await getFeedbackByProductId(params.productId);
+
+  if (isErr(feedback)) {
+    throw new Response("Error loading feedback", { status: 500 });
+  }
+
   return {
     product: product.value,
+    feedback: feedback.value,
   };
 }
 
@@ -28,10 +36,9 @@ export default function ShowProduct({
   params,
 }: Route.ComponentProps) {
   const data = loaderData;
-  const { product } = data;
+  const { product, feedback } = data;
 
-  const feedback: Feedback[] = [];
-  const averageRating = 1.5;
+  const averageRating = Number(product.feedbackAvg);
   const hasRated = false;
 
   return (
