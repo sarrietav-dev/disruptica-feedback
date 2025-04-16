@@ -1,4 +1,4 @@
-import { unauthorized } from "@/lib/serializers";
+import { error, unauthorized } from "@/lib/serializers";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import logger from "@/lib/logger";
@@ -61,4 +61,21 @@ function verifyToken(token: string): { id: string; email: string } | null {
   } catch (error) {
     return null;
   }
+}
+
+export async function isUser(req: Request, res: Response, next: NextFunction) {
+  if (req.user?.role !== "USER") {
+    return res.status(403).json(unauthorized("Forbidden"));
+  }
+  return next();
+}
+
+export function isAdmin(req: Request, res: Response, next: NextFunction): void {
+  const user = req.user; // Assuming `req.user` is populated by authentication middleware
+
+  if (user && user.role === "ADMIN") {
+    return next(); // User is authorized
+  }
+
+  res.status(403).json(error("Forbidden")); // User is not authorized
 }

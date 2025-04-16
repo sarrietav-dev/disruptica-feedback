@@ -1,3 +1,4 @@
+import { isAdmin } from "@/features/auth/auth-middleware";
 import { CategoryController } from "@/features/categories/category-controller";
 import { isErr } from "@/lib/result";
 import { created, internalServerError, notFound, ok } from "@/lib/serializers";
@@ -11,7 +12,7 @@ const createCategorySchema = z.object({
   name: z.string().min(1),
 });
 
-router.post("/", async (req: Request, res: Response): Promise<any> => {
+router.post("/", isAdmin, async (req: Request, res: Response): Promise<any> => {
   const parsed = createCategorySchema.safeParse(req.body);
 
   if (!parsed.success) {
@@ -56,7 +57,7 @@ const updateCategorySchema = z.object({
   description: z.string().optional(),
 });
 
-router.put("/:id", async (req: Request, res: Response): Promise<any> => {
+router.put("/:id", isAdmin, async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
   const parsed = updateCategorySchema.safeParse(req.body);
 
@@ -73,7 +74,7 @@ router.put("/:id", async (req: Request, res: Response): Promise<any> => {
   return res.status(200).json(ok(result.value));
 });
 
-router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
+router.delete("/:id", isAdmin, async (req: Request, res: Response): Promise<any> => {
   const { id } = req.params;
 
   const result = await categoryController.deleteCategory(id);
