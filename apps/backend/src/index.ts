@@ -3,12 +3,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import routes from "./routes";
 import { apiReference } from "@scalar/express-api-reference";
+import helmet from "helmet";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(helmet())
 
 app.use("/api", routes);
 
