@@ -1,6 +1,7 @@
 import { db, products } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
 import { eq } from "drizzle-orm";
+import { Product } from "./product-model";
 
 export class ProductController {
   async createProduct(
@@ -60,18 +61,23 @@ export class ProductController {
   async updateProduct(
     productId: string,
     data: { name?: string; description?: string; price?: number }
-  ): Promise<Result<string, string>> {
+  ): Promise<Result<Product, string>> {
     try {
       const result = await db
         .update(products)
         .set(data)
-        .where(eq(products.id, productId));
+        .where(eq(products.id, productId))
+        .returning({ products });
 
       if (!result) {
         return err("Product update failed");
       }
 
-      return ok("Product updated successfully");
+      if (result.length === 0) {
+        return err("Product not found");
+      }
+
+      return ok(result[0].products);
     } catch (error) {
       console.log("error", error);
       return err("Internal server error");

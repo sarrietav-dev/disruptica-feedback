@@ -1,37 +1,37 @@
-export function response(data: any, status: number) {
+export function response(data: any) {
   return {
-    status: status,
+    status: "success",
     data: data,
   };
 }
 
-export function error(message: string, status: number) {
+export function error(message: string) {
   return {
-    status: status,
+    status: "error",
     error: message,
   };
 }
 
 export function created(data: any) {
-  return response(data, 201);
+  return response(data);
 }
 
 export function ok(data: any) {
-  return response(data, 200);
+  return response(data);
 }
 
 export function notFound(message: string) {
-  return error(message, 404);
+  return error(message);
 }
 
 export function badRequest(message: string) {
-  return error(message, 400);
+  return error(message);
 }
 
 export function internalServerError(message: string) {
-  return error(message, 500);
+  return error(message);
 }
 
 export function unauthorized(message: string) {
-  return error(message, 401);
+  return error(message);
 }
