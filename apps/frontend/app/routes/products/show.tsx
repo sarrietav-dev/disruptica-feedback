@@ -13,6 +13,8 @@ import type { Feedback } from "~/features/feedback/types/feedback";
 import getFeedbackByProductId from "~/features/products/api/get-feedback-by-product";
 import getCategory from "~/features/categories/api/get-category";
 import { Badge } from "~/components/ui/badge";
+import { useAtomValue } from "jotai";
+import { currentUser } from "~/lib/auth";
 
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const product = await getProduct(params.productId);
@@ -47,6 +49,8 @@ export default function ShowProduct({
   const data = loaderData;
   const { product, feedback, productCategory } = data;
 
+  const user = useAtomValue(currentUser);
+
   const averageRating = Number(product.feedbackAvg);
   const hasRated = false;
 
@@ -77,12 +81,14 @@ export default function ShowProduct({
                     </span>
                   </div>
                 </div>
-                <Button asChild variant="outline" size="sm">
-                  <Link to={`/products/${product.id}/edit`}>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit
-                  </Link>
-                </Button>
+                {user?.role === "ADMIN" && (
+                  <Button asChild variant="outline" size="sm">
+                    <Link to={`/products/${product.id}/edit`}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit
+                    </Link>
+                  </Button>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="w-full h-64 bg-muted rounded-md mb-6 flex items-center justify-center">
