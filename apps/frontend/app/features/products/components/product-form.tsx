@@ -23,7 +23,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import createProduct from "../api/create-product";
-import updateProduct from "../api/updateProduct";
+import updateProduct from "../api/update-product";
 
 const formSchema = z.object({
   name: z.string().min(2, {
