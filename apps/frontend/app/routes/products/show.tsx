@@ -12,6 +12,7 @@ import { FeedbackList } from "~/features/feedback/components/feedback-list";
 import type { Feedback } from "~/features/feedback/types/feedback";
 import getFeedbackByProductId from "~/features/products/api/get-feedback-by-product";
 import getCategory from "~/features/categories/api/get-category";
+import { Badge } from "~/components/ui/badge";
 
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const product = await getProduct(params.productId);
@@ -99,13 +100,9 @@ export default function ShowProduct({
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="font-medium">Category ID</p>
-                      <p className="text-muted-foreground">
-                        {productCategory.name}
-                      </p>
-                    </div>
+                  <div className="flex flex-col gap-2 text-sm">
+                    <p className="font-medium">Category</p>
+                    <Badge variant="outline">{productCategory.name}</Badge>
                   </div>
                 </div>
               </CardContent>
