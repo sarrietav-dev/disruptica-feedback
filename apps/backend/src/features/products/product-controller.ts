@@ -25,9 +25,15 @@ export class ProductController {
     }
   }
 
-  async getAllProducts(): Promise<Result<any[], string>> {
+  async getAllProducts(categoryId?: string): Promise<Result<any[], string>> {
     try {
-      const allProducts = await db.select().from(products);
+      let query = db
+        .select()
+        .from(products)
+        .where(categoryId ? eq(products.categoryId, categoryId) : undefined)
+        .orderBy();
+
+      const allProducts = await query;
 
       if (!allProducts) {
         return err("No products found");

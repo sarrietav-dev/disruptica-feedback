@@ -1,6 +1,12 @@
 import { ProductController } from "@/features/products/product-controller";
 import { isErr } from "@/lib/result";
-import { created, internalServerError, notFound, ok } from "@/lib/serializers";
+import {
+  badRequest,
+  created,
+  internalServerError,
+  notFound,
+  ok,
+} from "@/lib/serializers";
 import { Request, Response, Router } from "express";
 import { z } from "zod";
 
@@ -31,7 +37,15 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
 });
 
 router.get("/", async (req: Request, res: Response): Promise<any> => {
-  const result = await productController.getAllProducts();
+  const { categoryId } = req.query;
+
+  const parsed = z.string().uuid().safeParse(categoryId);
+
+  if (!parsed.success) {
+    return res.status(400).json(badRequest("Invalid category ID"));
+  }
+
+  const result = await productController.getAllProducts(parsed.data);
 
   if (isErr(result)) {
     return res.status(500).json(internalServerError(result.error));

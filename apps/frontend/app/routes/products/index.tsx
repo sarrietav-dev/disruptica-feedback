@@ -8,14 +8,17 @@ import { Button } from "~/components/ui/button";
 import { ProductFilters } from "~/features/products/components/product-filter";
 import getCategories from "~/features/categories/api/get-categories";
 
-export async function clientLoader({}: Route.LoaderArgs) {
-  const product = await getProducts();
+export async function clientLoader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const category = url.searchParams.get("category");
+
+  const product = await getProducts(category ?? undefined);
 
   if (isErr(product)) {
     throw new Response("Error loading products", { status: 500 });
   }
 
-  const categories = await getCategories()
+  const categories = await getCategories();
 
   if (isErr(categories)) {
     throw new Response("Error loading categories", { status: 500 });
@@ -28,10 +31,9 @@ export async function clientLoader({}: Route.LoaderArgs) {
 }
 
 export default function IndexProducts({ loaderData }: Route.ComponentProps) {
-  const {products, categories} = loaderData;
+  const { products, categories } = loaderData;
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category") || "";
-  const sort = searchParams.get("sort") || "latest";
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -49,7 +51,7 @@ export default function IndexProducts({ loaderData }: Route.ComponentProps) {
       </div>
 
       <div className="grid md:grid-cols-[240px_1fr] gap-8">
-        <ProductFilters currentCategory={category} currentSort={sort} categories={categories} />
+        <ProductFilters currentCategory={category} categories={categories} />
         <div className="space-y-6">
           <ProductList products={products} />
         </div>
