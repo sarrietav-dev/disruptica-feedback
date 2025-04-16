@@ -1,12 +1,6 @@
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "~/components/ui/card";
+import { Card, CardHeader, CardContent } from "~/components/ui/card";
 import type { Product } from "../types/product";
 import { Badge } from "~/components/ui/badge";
-import { formatDate } from "~/lib/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -28,12 +22,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-muted-foreground">Product Image</span>
         </div>
       </CardContent>
-      <CardFooter className="text-sm text-muted-foreground">
-        <div className="w-full flex flex-col gap-1">
-          <p>Created: {formatDate(product.createdAt)}</p>
-          <p>Updated: {formatDate(product.updatedAt)}</p>
-        </div>
-      </CardFooter>
     </Card>
   );
 }
