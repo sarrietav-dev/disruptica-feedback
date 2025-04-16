@@ -7,6 +7,8 @@ export default async function getProducts(): Promise<
 > {
   const { data } = await api.get<ApiResponse<Product[]>>("/products");
 
+  console.log("data", data);
+
   if (data.status === "error") {
     return err(data.error);
   }
