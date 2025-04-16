@@ -24,10 +24,10 @@ FROM oven/bun:slim AS backend-build
 WORKDIR /backend
 COPY ./apps/backend ./
 COPY --from=backend-dependencies /backend/node_modules ./node_modules
-COPY --from=frontend-build /frontend/build ./public
+COPY --from=frontend-build /frontend/build/client ./public
 
 # Expose the port the backend runs on
 EXPOSE 8000
 
 # Command to run the backend application
-CMD ["bun", "src/index.ts"]
+CMD ["sh", "-c", "bunx drizzle-kit push && bun src/index.ts"]

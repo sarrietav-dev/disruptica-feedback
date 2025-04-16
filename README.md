@@ -28,6 +28,8 @@ Disruptica Feedback is a full-stack application designed to manage feedback for 
    docker-compose up --build
    ```
 
+   If the server crashes, it's probably because the database took too long to start. Run the containers again.
+
 2. Go to `http://localhost:8000`
 
 3. When registering, if it is the first time it will prompt you to sign up as an admin. The **admin key** is located as an environment variable in the docker compose file.
