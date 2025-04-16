@@ -24,6 +24,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import createProduct from "../api/create-product";
 import updateProduct from "../api/update-product";
+import { redirect, useNavigate } from "react-router";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -43,6 +44,7 @@ interface ProductFormProps {
 
 export default function ProductForm({ categories, product }: ProductFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const defaultValues: Partial<ProductFormValues> = {
     name: product?.name || "",
@@ -74,6 +76,8 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
           description: "Your product has been created successfully.",
         });
       }
+
+      navigate("/products");
     } catch (error) {
       toast.error("Error", {
         description: "Something went wrong. Please try again.",
