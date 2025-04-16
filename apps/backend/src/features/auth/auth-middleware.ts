@@ -2,6 +2,8 @@ import { unauthorized } from "@/lib/serializers";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import logger from "@/lib/logger";
+import { db, users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function authMiddleware(
   req: Request,
@@ -19,15 +21,27 @@ export async function authMiddleware(
     return;
   }
 
-  // Simulate token verification
   const user = verifyToken(token);
+
   if (!user) {
     logger.error("Invalid token");
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
 
-  req.userId = user.id;
+  const userDb = await db
+    .select()
+    .from(users)
+    .limit(1)
+    .where(eq(users.id, user.id));
+
+  if (!userDb || userDb.length === 0) {
+    logger.error("User not found");
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  req.user = userDb[0];
 
   next();
 }

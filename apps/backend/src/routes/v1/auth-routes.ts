@@ -73,11 +73,11 @@ router.get(
   "/me",
   authMiddleware,
   async (req: Request, res: Response): Promise<any> => {
-    if (!req.userId) {
+    if (!req.user) {
       return res.status(401).json(unauthorized("Unauthorized"));
     }
 
-    const result = await authController.me(req.userId);
+    const result = await authController.me(req.user.id);
 
     if (isErr(result)) {
       return res.status(401).json(unauthorized(result.error));
