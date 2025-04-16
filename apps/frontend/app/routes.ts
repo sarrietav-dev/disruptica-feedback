@@ -1,5 +1,4 @@
 import { type RouteConfig, index, route } from "@react-router/dev/routes";
-import { flatRoutes } from "@react-router/fs-routes";
 
 export default [
   route("login", "./routes/login.tsx"),
@@ -11,5 +10,6 @@ export default [
   ]),
   route("feedback", "./routes/feedback/feedback.tsx", [
     index("./routes/feedback/index.tsx"),
+    route("new", "./routes/feedback/new.tsx"),
   ]),
 ] satisfies RouteConfig;

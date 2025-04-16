@@ -2,12 +2,11 @@ import { PlusIcon } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 import getFeedback from "~/features/feedback/api/get-feedback";
-import { FeedbackList } from "~/features/feedback/components/feedback-list";
-import getFeedbackByProductId from "~/features/products/api/get-feedback-by-product";
 import { isErr } from "~/lib/result";
 import type { Route } from "./+types";
 import { FeedbackFilters } from "~/features/feedback/components/feedback-filters";
 import getProducts from "~/features/products/api/get-products";
+import FeedbackList from "~/features/feedback/components/feedack-list-page";
 
 export async function clientLoader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);

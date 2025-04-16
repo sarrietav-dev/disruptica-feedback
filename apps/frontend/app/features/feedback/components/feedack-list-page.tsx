@@ -14,6 +14,14 @@ interface FeedbackListProps {
 }
 
 export default function FeedbackList({ feedback }: FeedbackListProps) {
+  if (feedback.length === 0) {
+    return (
+      <div className="text-center py-12 bg-muted/40 rounded-lg">
+        <p className="text-muted-foreground">No feedback found</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {feedback.map((item) => (
