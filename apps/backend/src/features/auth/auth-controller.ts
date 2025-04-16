@@ -6,6 +6,30 @@ import { JWT_SECRET } from "@/config/env";
 import { eq } from "drizzle-orm";
 
 export class AuthController {
+  async me(userId: string): Promise<Result<any, string>> {
+    try {
+      const user = await db
+        .select({
+          id: users.id,
+          name: users.name,
+          email: users.email,
+          role: users.role,
+        })
+        .from(users)
+        .where(eq(users.id, userId));
+
+      if (!user || user.length === 0) {
+        console.log("User not found");
+        return err("User not found");
+      }
+
+      return ok(user[0]);
+    } catch (error) {
+      console.log("error", error);
+      return err("Internal server error");
+    }
+  }
+
   async signUp(
     email: string,
     password: string,

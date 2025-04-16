@@ -1,6 +1,12 @@
 import { AuthController } from "@/features/auth/auth-controller";
+import { authMiddleware } from "@/features/auth/auth-middleware";
 import { isErr } from "@/lib/result";
-import { created, internalServerError, ok } from "@/lib/serializers";
+import {
+  created,
+  internalServerError,
+  ok,
+  unauthorized,
+} from "@/lib/serializers";
 import { Request, Response, Router } from "express";
 import { z } from "zod";
 
@@ -62,5 +68,23 @@ router.post("/sign-in", async (req: Request, res: Response): Promise<any> => {
 
   return res.status(200).json(ok(token));
 });
+
+router.get(
+  "/me",
+  authMiddleware,
+  async (req: Request, res: Response): Promise<any> => {
+    if (!req.userId) {
+      return res.status(401).json(unauthorized("Unauthorized"));
+    }
+
+    const result = await authController.me(req.userId);
+
+    if (isErr(result)) {
+      return res.status(401).json(unauthorized(result.error));
+    }
+
+    return res.status(200).json(ok(result.value));
+  }
+);
 
 export default router;
