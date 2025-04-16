@@ -1,6 +1,12 @@
 import { FeedbackController } from "@/features/feedback/feedback-controller";
 import { isErr } from "@/lib/result";
-import { created, internalServerError, notFound, ok } from "@/lib/serializers";
+import {
+  badRequest,
+  created,
+  internalServerError,
+  notFound,
+  ok,
+} from "@/lib/serializers";
 import { Request, Response, Router } from "express";
 import { z } from "zod";
 
@@ -40,7 +46,17 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
 });
 
 router.get("/", async (req: Request, res: Response): Promise<any> => {
-  const result = await feedbackController.getAllFeedback();
+  const { productId, rating } = req.query;
+  const parsed = z.string().uuid().optional().safeParse(productId);
+  const parsedRating = z.coerce.number().min(1).max(5).optional().safeParse(rating);
+  if (!parsed.success && !parsedRating.success) {
+    return res.status(400).json(badRequest("Invalid product ID or rating"));
+  }
+
+  const result = await feedbackController.getAllFeedback(
+    parsed.data,
+    parsedRating.data
+  );
 
   if (isErr(result)) {
     return res.status(500).json(internalServerError(result.error));

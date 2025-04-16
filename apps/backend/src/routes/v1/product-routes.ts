@@ -39,7 +39,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
 router.get("/", async (req: Request, res: Response): Promise<any> => {
   const { categoryId } = req.query;
 
-  const parsed = z.string().uuid().safeParse(categoryId);
+  const parsed = z.string().uuid().optional().safeParse(categoryId);
 
   if (!parsed.success) {
     return res.status(400).json(badRequest("Invalid category ID"));

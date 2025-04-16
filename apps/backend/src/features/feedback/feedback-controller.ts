@@ -1,7 +1,7 @@
 import { db, feedback } from "@/db/schema";
 import { Result, err, ok } from "@/lib/result";
 import { Feedback } from "./feedback-model";
-import { eq } from "drizzle-orm";
+import { and, eq, gte, or } from "drizzle-orm";
 
 export class FeedbackController {
   async createFeedback(
@@ -29,11 +29,24 @@ export class FeedbackController {
     }
   }
 
-  async getAllFeedback(): Promise<Result<Feedback[], string>> {
+  async getAllFeedback(
+    productId?: string,
+    rating?: number
+  ): Promise<Result<Feedback[], string>> {
     try {
-      const feedbacks = await db.select().from(feedback);
+      let query = db
+        .select()
+        .from(feedback)
+        .where(
+          and(
+            productId ? eq(feedback.productId, productId) : undefined,
+            rating ? gte(feedback.rating, rating) : undefined
+          )
+        );
 
-      if (!feedbacks || feedbacks.length === 0) {
+      const feedbacks = await query;
+
+      if (!feedbacks) {
         return err("No feedback found");
       }
 

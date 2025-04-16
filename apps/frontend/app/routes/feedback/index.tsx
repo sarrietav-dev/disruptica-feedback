@@ -9,8 +9,12 @@ import type { Route } from "./+types";
 import { FeedbackFilters } from "~/features/feedback/components/feedback-filters";
 import getProducts from "~/features/products/api/get-products";
 
-export async function clientLoader() {
-  const feedback = await getFeedback();
+export async function clientLoader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const product = url.searchParams.get("product") ?? undefined;
+  const rating = url.searchParams.get("rating") ?? undefined;
+
+  const feedback = await getFeedback(product, rating && rating !== "all" ? Number(rating) : undefined);
 
   if (isErr(feedback)) {
     throw new Response("Error loading feedback", { status: 500 });
