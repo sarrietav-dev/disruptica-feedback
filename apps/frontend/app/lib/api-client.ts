@@ -13,7 +13,7 @@ export type ApiResponse<T> =
       error: string;
     };
 
-export const api = Axios.create({ baseURL: env.API_URL });
+export const api = Axios.create({ baseURL: import.meta.env.VITE_APP_API_URL || "/api/api" });
 
 api.interceptors.request.use((config) => {
   const token = sessionStorage.getItem(ACCESS_TOKEN);

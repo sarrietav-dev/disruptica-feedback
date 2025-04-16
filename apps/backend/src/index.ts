@@ -6,6 +6,7 @@ import morgan from "morgan";
 import logger from "./lib/logger";
 import { apiReference } from "@scalar/express-api-reference";
 import helmet from "helmet";
+import path from "path";
 
 dotenv.config();
 
@@ -37,7 +38,7 @@ if (process.env.NODE_ENV !== "production") {
           ],
         },
       },
-    }),
+    })
   );
 } else {
   app.use(helmet());
@@ -48,7 +49,7 @@ app.use(
     stream: {
       write: (message) => logger.info(message.trim()), // Redirect Morgan logs to Winston
     },
-  }),
+  })
 );
 
 app.use("/api", routes);
@@ -63,11 +64,18 @@ if (process.env.NODE_ENV !== "production") {
     apiReference({
       // Put your OpenAPI url here:
       url: "/api/docs",
-    }),
+    })
   );
 }
 
-const PORT = process.env.PORT || 4000;
+// Serve static files from the build directory
+app.use(express.static(path.join(__dirname, "..", "public")));
+
+app.get("/{*splat}", (req, res) => {
+  return res.sendFile(path.join(__dirname, "..", "public", "index.html"), () => {});
+}, () => {});
+
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

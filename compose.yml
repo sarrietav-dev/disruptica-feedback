@@ -11,16 +11,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
   server:
     build:
-      context: apps/backend
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "4000:4000"
+      - "8000:8000"
     depends_on:
       - db
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/feedback
       JWT_SECRET: your_jwt_secret
       NODE_ENV: development
+      ADMIN_KEY: your_admin_key
 
 volumes:
   postgres_data:

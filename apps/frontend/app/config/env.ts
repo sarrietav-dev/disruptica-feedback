@@ -30,7 +30,10 @@ const createEnv = () => {
     const [key, value] = curr;
     if (key.startsWith("VITE_APP_")) {
       acc[key.replace("VITE_APP_", "")] = value;
+    } else {
+      acc[key] = value;
     }
+
     return acc;
   }, {});
 
@@ -43,7 +46,7 @@ The following variables are missing or invalid:
 ${Object.entries(parsedEnv.error.flatten().fieldErrors)
   .map(([k, v]) => `- ${k}: ${v}`)
   .join("\n")}
-`,
+`
     );
   }
 
