@@ -3,11 +3,15 @@ import { redirect } from "react-router";
 import { env } from "~/config/env";
 import { ACCESS_TOKEN } from "~/features/auth/types/access-token";
 
-export type ApiResponse<T> = {
-  datos: T;
-  estado: "ok" | "error";
-  mensaje: string;
-};
+export type ApiResponse<T> =
+  | {
+      data: T;
+      status: "success";
+    }
+  | {
+      status: "error";
+      error: string;
+    };
 
 export const api = Axios.create({ baseURL: env.API_URL });
 
