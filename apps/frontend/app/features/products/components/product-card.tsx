@@ -21,7 +21,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       }
       setCategory(response.value);
     });
-  });
+  }, []);
 
   return (
     <Card className="h-full flex flex-col">
