@@ -2,7 +2,9 @@ import { AuthController } from "@/features/auth/auth-controller";
 import { authMiddleware } from "@/features/auth/auth-middleware";
 import { isErr } from "@/lib/result";
 import {
+  badRequest,
   created,
+  error,
   internalServerError,
   ok,
   unauthorized,
@@ -17,18 +19,20 @@ const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   name: z.string().min(1),
+  isAdmin: z.boolean().default(false),
+  adminKey: z.string().optional(),
 });
 
 router.post("/sign-up", async (req: Request, res: Response): Promise<any> => {
   const parsed = signUpSchema.safeParse(req.body);
 
   if (!parsed.success) {
-    return res.status(400).json({ error: parsed.error.flatten().fieldErrors });
+    return res.status(400).json(error(parsed.error.flatten().fieldErrors));
   }
 
-  const { email, password, name } = parsed.data;
+  const { email, password, name, isAdmin, adminKey } = parsed.data;
 
-  const result = await authController.signUp(email, password, name);
+  const result = await authController.signUp(email, password, name, isAdmin, adminKey);
 
   if (isErr(result)) {
     return res.status(500).json(internalServerError(result.error));

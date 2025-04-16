@@ -33,15 +33,22 @@ export class AuthController {
   async signUp(
     email: string,
     password: string,
-    name: string
+    name: string,
+    isAdmin: boolean,
+    adminKey?: string
   ): Promise<Result<string, string>> {
     try {
+      if (isAdmin && adminKey !== process.env.ADMIN_KEY) {
+        return err("Invalid admin key");
+      }
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const result = await db.insert(users).values({
         email,
         name,
         password: hashedPassword,
+        role: isAdmin ? "ADMIN" : "USER",
       });
 
       if (!result) {

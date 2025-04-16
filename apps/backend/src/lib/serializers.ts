@@ -5,7 +5,7 @@ export function response(data: any) {
   };
 }
 
-export function error(message: string) {
+export function error(message: any) {
   return {
     status: "error",
     error: message,

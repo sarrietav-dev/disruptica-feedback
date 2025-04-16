@@ -15,6 +15,6 @@ router.use("/v1/auth", authRoutesV1);
 router.use("/v1/products", authMiddleware, productRoutesV1);
 router.use("/v1/categories", authMiddleware, categoryRoutesV1);
 router.use("/v1/feedback", authMiddleware, feedbackRoutesV1);
-router.use("/v1/users", authMiddleware, userRoutesV1);
+router.use("/v1/users", userRoutesV1);
 
 export default router;

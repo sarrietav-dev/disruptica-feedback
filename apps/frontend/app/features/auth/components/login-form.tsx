@@ -121,14 +121,6 @@ export default function LoginForm() {
             Register
           </Link>
         </div>
-
-        <div className="rounded-md bg-muted p-4">
-          <h3 className="mb-2 text-sm font-medium">Demo Accounts</h3>
-          <div className="space-y-1 text-xs text-muted-foreground">
-            <p>Admin: admin@example.com / password</p>
-            <p>User: user@example.com / password</p>
-          </div>
-        </div>
       </form>
     </Form>
   );
