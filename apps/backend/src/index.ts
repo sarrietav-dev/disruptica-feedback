@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import routes from "./routes";
+import morgan from "morgan";
+import logger from "./lib/logger";
 import { apiReference } from "@scalar/express-api-reference";
 import helmet from "helmet";
 
@@ -40,6 +42,14 @@ if (process.env.NODE_ENV !== "production") {
 } else {
   app.use(helmet());
 }
+
+app.use(
+  morgan("combined", {
+    stream: {
+      write: (message) => logger.info(message.trim()), // Redirect Morgan logs to Winston
+    },
+  })
+);
 
 app.use("/api", routes);
 

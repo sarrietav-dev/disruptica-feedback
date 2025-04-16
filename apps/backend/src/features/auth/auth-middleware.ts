@@ -1,6 +1,7 @@
 import { unauthorized } from "@/lib/serializers";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import logger from "@/lib/logger";
 
 export async function authMiddleware(
   req: Request,
@@ -13,7 +14,7 @@ export async function authMiddleware(
       ? tokenHeader.split(" ")[1]
       : null;
   if (!token) {
-    console.log("No token provided", tokenHeader);
+    logger.warn("No token provided", tokenHeader);
     res.status(401).json(unauthorized("Unauthorized"));
     return;
   }
@@ -21,7 +22,7 @@ export async function authMiddleware(
   // Simulate token verification
   const user = verifyToken(token);
   if (!user) {
-    console.log("Invalid token");
+    logger.error("Invalid token");
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
