@@ -11,6 +11,7 @@ import FeedbackForm from "~/features/feedback/components/feedback-form";
 import { FeedbackList } from "~/features/feedback/components/feedback-list";
 import type { Feedback } from "~/features/feedback/types/feedback";
 import getFeedbackByProductId from "~/features/products/api/get-feedback-by-product";
+import getCategory from "~/features/categories/api/get-category";
 
 export async function clientLoader({ params }: Route.LoaderArgs) {
   const product = await getProduct(params.productId);
@@ -25,9 +26,16 @@ export async function clientLoader({ params }: Route.LoaderArgs) {
     throw new Response("Error loading feedback", { status: 500 });
   }
 
+  const productCategory = await getCategory(product.value.categoryId);
+
+  if (isErr(productCategory)) {
+    throw new Response("Error loading category", { status: 500 });
+  }
+
   return {
     product: product.value,
     feedback: feedback.value,
+    productCategory: productCategory.value,
   };
 }
 
@@ -36,7 +44,7 @@ export default function ShowProduct({
   params,
 }: Route.ComponentProps) {
   const data = loaderData;
-  const { product, feedback } = data;
+  const { product, feedback, productCategory } = data;
 
   const averageRating = Number(product.feedbackAvg);
   const hasRated = false;
@@ -95,7 +103,7 @@ export default function ShowProduct({
                     <div>
                       <p className="font-medium">Category ID</p>
                       <p className="text-muted-foreground">
-                        {product.categoryId}
+                        {productCategory.name}
                       </p>
                     </div>
                   </div>
