@@ -53,7 +53,7 @@ router.post("/sign-in", async (req: Request, res: Response): Promise<any> => {
   const token = result.value;
 
   res.cookie("token", token, {
-    httpOnly: true,
+    httpOnly: process.env.NODE_ENV === "production", // Set to true if using HTTPS
     secure: process.env.NODE_ENV === "production", // Set to true if using HTTPS
     maxAge: 3600000, // 1 hour
     sameSite: "strict", // CSRF protection

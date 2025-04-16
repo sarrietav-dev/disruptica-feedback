@@ -20,6 +20,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/feedback
       JWT_SECRET: your_jwt_secret
+      NODE_ENV: development
 
 volumes:
   postgres_data:
