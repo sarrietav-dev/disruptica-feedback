@@ -12,4 +12,12 @@ export default [
     index("./routes/feedback/index.tsx"),
     route("new", "./routes/feedback/new.tsx"),
   ]),
+  route("admin", "./routes/admin/admin.tsx", [
+    index("./routes/admin/index.tsx"),
+    route("categories", "./routes/categories/categories.tsx", [
+      index("./routes/categories/index.tsx"),
+      route("new", "./routes/categories/new.tsx"),
+      route(":categoryId/edit", "./routes/categories/edit.tsx"),
+    ]),
+  ]),
 ] satisfies RouteConfig;
