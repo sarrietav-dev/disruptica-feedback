@@ -11,11 +11,6 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { Toaster } from "sonner";
 import { Navbar } from "./components/layout/navbar";
-import { useSetAtom } from "jotai";
-import { currentUser } from "./lib/auth";
-import { useEffect } from "react";
-import me from "./features/auth/api/me";
-import { isErr } from "./lib/result";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -31,18 +26,6 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const setUser = useSetAtom(currentUser);
-
-  useEffect(() => {
-      me().then((res) => {
-        if (isErr(res)) {
-          setUser(null);
-          return;
-        }
-        setUser(res.value);
-      });
-  }, [])
-
   return (
     <html lang="en">
       <head>
