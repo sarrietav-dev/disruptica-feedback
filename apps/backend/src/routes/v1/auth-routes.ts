@@ -10,6 +10,7 @@ const authController = new AuthController();
 const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  name: z.string().min(1),
 });
 
 router.post("/sign-up", async (req: Request, res: Response): Promise<any> => {
@@ -19,9 +20,9 @@ router.post("/sign-up", async (req: Request, res: Response): Promise<any> => {
     return res.status(400).json({ error: parsed.error.flatten().fieldErrors });
   }
 
-  const { email, password } = parsed.data;
+  const { email, password, name } = parsed.data;
 
-  const result = await authController.signUp(email, password);
+  const result = await authController.signUp(email, password, name);
 
   if (isErr(result)) {
     return res.status(500).json(internalServerError(result.error));

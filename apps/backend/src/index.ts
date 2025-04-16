@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV !== "production") {
   // This configuration is here to use the Scalar API Reference in development mode
   app.use(
     helmet({
@@ -47,7 +47,7 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV !== "production") {
   app.use(
     "/reference",
     apiReference({

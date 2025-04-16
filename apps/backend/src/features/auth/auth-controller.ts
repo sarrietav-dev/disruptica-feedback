@@ -8,13 +8,15 @@ import { eq } from "drizzle-orm";
 export class AuthController {
   async signUp(
     email: string,
-    password: string
+    password: string,
+    name: string
   ): Promise<Result<string, string>> {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const result = await db.insert(users).values({
         email,
+        name,
         password: hashedPassword,
       });
 
