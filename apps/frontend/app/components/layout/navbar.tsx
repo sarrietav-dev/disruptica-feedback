@@ -1,4 +1,6 @@
+import { useAtomValue } from "jotai";
 import { Link, useLocation } from "react-router";
+import { currentUser } from "~/lib/auth";
 import { cn } from "~/lib/utils";
 
 const navItems = [
@@ -8,6 +10,7 @@ const navItems = [
 
 export function Navbar() {
   const { pathname } = useLocation();
+  const user = useAtomValue(currentUser);
 
   return (
     <div className="mr-4 flex">
@@ -29,6 +32,19 @@ export function Navbar() {
             {item.name}
           </Link>
         ))}
+        {user?.role === "ADMIN" && (
+          <Link
+            to="/admin"
+            className={cn(
+              "transition-colors hover:text-foreground/80",
+              pathname.startsWith("/admin")
+                ? "text-foreground"
+                : "text-foreground/60"
+            )}
+          >
+            Admin
+          </Link>
+        )}
       </nav>
     </div>
   );

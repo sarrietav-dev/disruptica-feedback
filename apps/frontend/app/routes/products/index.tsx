@@ -7,6 +7,8 @@ import { Link, useSearchParams } from "react-router";
 import { Button } from "~/components/ui/button";
 import { ProductFilters } from "~/features/products/components/product-filter";
 import getCategories from "~/features/categories/api/get-categories";
+import { useAtomValue } from "jotai";
+import { currentUser } from "~/lib/auth";
 
 export async function clientLoader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
@@ -34,6 +36,7 @@ export default function IndexProducts({ loaderData }: Route.ComponentProps) {
   const { products, categories } = loaderData;
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category") || "";
+  const user = useAtomValue(currentUser);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -42,12 +45,14 @@ export default function IndexProducts({ loaderData }: Route.ComponentProps) {
           <h1 className="text-3xl font-bold">Products</h1>
           <p className="text-muted-foreground">Manage and view all products</p>
         </div>
-        <Button asChild>
-          <Link to="/products/new">
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Add Product
-          </Link>
-        </Button>
+        {user?.role === "ADMIN" && (
+          <Button asChild>
+            <Link to="/products/new">
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Add Product
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="grid md:grid-cols-[240px_1fr] gap-8">
