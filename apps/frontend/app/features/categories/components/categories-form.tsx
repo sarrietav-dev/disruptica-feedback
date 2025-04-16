@@ -106,8 +106,8 @@ export function CategoryForm({ category }: CategoryFormProps) {
                 ? "Updating..."
                 : "Creating..."
               : category
-              ? "Update Category"
-              : "Create Category"}
+                ? "Update Category"
+                : "Create Category"}
           </Button>
         </div>
       </form>

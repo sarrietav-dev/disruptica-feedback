@@ -10,4 +10,4 @@ export function saveToken(token: string): void {
   sessionStorage.setItem(ACCESS_TOKEN, token);
 }
 
-export const currentUser = atom<User & { role: "USER" | "ADMIN" } | null>();
+export const currentUser = atom<(User & { role: "USER" | "ADMIN" }) | null>();

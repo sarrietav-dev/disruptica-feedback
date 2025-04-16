@@ -3,7 +3,7 @@ import { err, ok, type Result } from "~/lib/result";
 import type { Product } from "../types/product";
 
 export default async function getProducts(
-  categoryId?: string
+  categoryId?: string,
 ): Promise<Result<Product[], string>> {
   const { data } = await api.get<ApiResponse<Product[]>>("/products", {
     params: { categoryId },

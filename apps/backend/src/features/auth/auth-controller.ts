@@ -35,7 +35,7 @@ export class AuthController {
     password: string,
     name: string,
     isAdmin: boolean,
-    adminKey?: string
+    adminKey?: string,
   ): Promise<Result<string, string>> {
     try {
       if (isAdmin && adminKey !== process.env.ADMIN_KEY) {
@@ -64,7 +64,7 @@ export class AuthController {
 
   async signIn(
     email: string,
-    password: string
+    password: string,
   ): Promise<Result<string, string>> {
     try {
       const user = await db.select().from(users).where(eq(users.email, email));
@@ -84,7 +84,7 @@ export class AuthController {
         JWT_SECRET ?? "secret",
         {
           expiresIn: "1h",
-        }
+        },
       );
 
       return ok(token);

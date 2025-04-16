@@ -13,7 +13,10 @@ export async function clientLoader({ request }: Route.LoaderArgs) {
   const product = url.searchParams.get("product") ?? undefined;
   const rating = url.searchParams.get("rating") ?? undefined;
 
-  const feedback = await getFeedback(product, rating && rating !== "all" ? Number(rating) : undefined);
+  const feedback = await getFeedback(
+    product,
+    rating && rating !== "all" ? Number(rating) : undefined,
+  );
 
   if (isErr(feedback)) {
     throw new Response("Error loading feedback", { status: 500 });

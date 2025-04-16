@@ -32,7 +32,13 @@ router.post("/sign-up", async (req: Request, res: Response): Promise<any> => {
 
   const { email, password, name, isAdmin, adminKey } = parsed.data;
 
-  const result = await authController.signUp(email, password, name, isAdmin, adminKey);
+  const result = await authController.signUp(
+    email,
+    password,
+    name,
+    isAdmin,
+    adminKey,
+  );
 
   if (isErr(result)) {
     return res.status(500).json(internalServerError(result.error));
@@ -88,7 +94,7 @@ router.get(
     }
 
     return res.status(200).json(ok(result.value));
-  }
+  },
 );
 
 export default router;

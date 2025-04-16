@@ -3,7 +3,7 @@ import type { Product } from "../types/product";
 import { err, ok, type Result } from "~/lib/result";
 
 export default async function createProduct(
-  product: Omit<Product, "id">
+  product: Omit<Product, "id">,
 ): Promise<Result<string, string>> {
   const { data } = await api.post<ApiResponse<string>>("/products", product);
 

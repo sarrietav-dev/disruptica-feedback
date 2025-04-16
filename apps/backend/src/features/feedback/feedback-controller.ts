@@ -8,7 +8,7 @@ export class FeedbackController {
     comment: string,
     rating: number,
     userId: string,
-    productId: string
+    productId: string,
   ): Promise<Result<string, string>> {
     try {
       const result = await db.insert(feedback).values({
@@ -31,7 +31,7 @@ export class FeedbackController {
 
   async getAllFeedback(
     productId?: string,
-    rating?: number
+    rating?: number,
   ): Promise<Result<Feedback[], string>> {
     try {
       let query = db
@@ -40,8 +40,8 @@ export class FeedbackController {
         .where(
           and(
             productId ? eq(feedback.productId, productId) : undefined,
-            rating ? gte(feedback.rating, rating) : undefined
-          )
+            rating ? gte(feedback.rating, rating) : undefined,
+          ),
         );
 
       const feedbacks = await query;
@@ -77,7 +77,7 @@ export class FeedbackController {
 
   async updateFeedback(
     feedbackId: string,
-    data: { comment?: string; rating?: number }
+    data: { comment?: string; rating?: number },
   ): Promise<Result<string, string>> {
     try {
       const result = await db

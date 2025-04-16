@@ -35,7 +35,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
     comment,
     rating,
     userId,
-    productId
+    productId,
   );
 
   if (isErr(result)) {
@@ -48,14 +48,19 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
 router.get("/", async (req: Request, res: Response): Promise<any> => {
   const { productId, rating } = req.query;
   const parsed = z.string().uuid().optional().safeParse(productId);
-  const parsedRating = z.coerce.number().min(1).max(5).optional().safeParse(rating);
+  const parsedRating = z.coerce
+    .number()
+    .min(1)
+    .max(5)
+    .optional()
+    .safeParse(rating);
   if (!parsed.success && !parsedRating.success) {
     return res.status(400).json(badRequest("Invalid product ID or rating"));
   }
 
   const result = await feedbackController.getAllFeedback(
     parsed.data,
-    parsedRating.data
+    parsedRating.data,
   );
 
   if (isErr(result)) {

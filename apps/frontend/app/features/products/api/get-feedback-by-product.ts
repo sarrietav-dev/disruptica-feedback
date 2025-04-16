@@ -3,11 +3,11 @@ import { api, type ApiResponse } from "~/lib/api-client";
 import { err, ok, type Result } from "~/lib/result";
 
 export default async function getFeedbackByProductId(
-  productId: string
+  productId: string,
 ): Promise<Result<Feedback[], string>> {
   try {
     const { data } = await api.get<ApiResponse<Feedback[]>>(
-      `/products/${productId}/feedback`
+      `/products/${productId}/feedback`,
     );
 
     if (data.status === "error") {

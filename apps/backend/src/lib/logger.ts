@@ -4,7 +4,7 @@ const logger = createLogger({
   level: "info",
   format: format.combine(
     format.timestamp(),
-    format.json() // Logs in JSON format
+    format.json(), // Logs in JSON format
   ),
   transports: [
     new transports.Console(), // Logs to the console

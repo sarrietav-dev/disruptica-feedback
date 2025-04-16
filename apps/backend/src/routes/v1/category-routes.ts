@@ -57,33 +57,43 @@ const updateCategorySchema = z.object({
   description: z.string().optional(),
 });
 
-router.put("/:id", isAdmin, async (req: Request, res: Response): Promise<any> => {
-  const { id } = req.params;
-  const parsed = updateCategorySchema.safeParse(req.body);
+router.put(
+  "/:id",
+  isAdmin,
+  async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
+    const parsed = updateCategorySchema.safeParse(req.body);
 
-  if (!parsed.success) {
-    return res.status(400).json({ error: parsed.error.flatten().fieldErrors });
-  }
+    if (!parsed.success) {
+      return res
+        .status(400)
+        .json({ error: parsed.error.flatten().fieldErrors });
+    }
 
-  const result = await categoryController.updateCategory(id, parsed.data);
+    const result = await categoryController.updateCategory(id, parsed.data);
 
-  if (isErr(result)) {
-    return res.status(500).json(internalServerError(result.error));
-  }
+    if (isErr(result)) {
+      return res.status(500).json(internalServerError(result.error));
+    }
 
-  return res.status(200).json(ok(result.value));
-});
+    return res.status(200).json(ok(result.value));
+  },
+);
 
-router.delete("/:id", isAdmin, async (req: Request, res: Response): Promise<any> => {
-  const { id } = req.params;
+router.delete(
+  "/:id",
+  isAdmin,
+  async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
 
-  const result = await categoryController.deleteCategory(id);
+    const result = await categoryController.deleteCategory(id);
 
-  if (isErr(result)) {
-    return res.status(500).json(internalServerError(result.error));
-  }
+    if (isErr(result)) {
+      return res.status(500).json(internalServerError(result.error));
+    }
 
-  return res.status(200).json(ok(result.value));
-});
+    return res.status(200).json(ok(result.value));
+  },
+);
 
 export default router;

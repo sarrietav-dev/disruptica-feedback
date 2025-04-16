@@ -79,7 +79,7 @@ router.get(
     }
 
     return res.status(200).json(ok(result.value));
-  }
+  },
 );
 
 const updateProductSchema = z.object({
@@ -107,7 +107,7 @@ router.put(
     }
 
     return res.status(200).json(ok(result.value));
-  }
+  },
 );
 
 router.delete(
@@ -123,7 +123,7 @@ router.delete(
     }
 
     return res.status(200).json(ok(result.value));
-  }
+  },
 );
 
 export default router;

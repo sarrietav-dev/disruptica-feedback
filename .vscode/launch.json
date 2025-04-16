@@ -5,19 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-        "type": "firefox",
-        "request": "launch",
-        "name": "Launch Firefox against localhost",
-        "url": "http://localhost:5174",
-        "webRoot": "${workspaceFolder}",
-        "firefoxExecutable": "/usr/bin/firefox-aurora",
-        "profile": "dev-edition-default",
-        "pathMappings": [
-            {
-                "url": "http://localhost:5174/node_modules/react-hook-form/src/form.tsx",
-                "path": "${workspaceFolder}/apps/frontend/app/components/ui/form.tsx"
-            },
-        ]
+      "type": "firefox",
+      "request": "launch",
+      "name": "Launch Firefox against localhost",
+      "url": "http://localhost:5174",
+      "webRoot": "${workspaceFolder}",
+      "firefoxExecutable": "/usr/bin/firefox-aurora",
+      "profile": "dev-edition-default",
+      "pathMappings": [
+        {
+          "url": "http://localhost:5174/node_modules/react-hook-form/src/form.tsx",
+          "path": "${workspaceFolder}/apps/frontend/app/components/ui/form.tsx"
+        }
+      ]
     }
-]
+  ]
 }

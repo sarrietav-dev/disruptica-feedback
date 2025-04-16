@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 export async function authMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> {
   const tokenHeader = req.headers["authorization"];
   const token =

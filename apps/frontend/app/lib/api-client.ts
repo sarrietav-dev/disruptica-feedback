@@ -32,7 +32,7 @@ api.interceptors.response.use(
       redirect("/login");
     }
     return res;
-  }
+  },
 );
 
 api.interceptors.response.use((res) => {

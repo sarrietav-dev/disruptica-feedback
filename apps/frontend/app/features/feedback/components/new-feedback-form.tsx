@@ -76,7 +76,7 @@ export function NewFeedbackForm({ products }: NewFeedbackFormProps) {
         {
           rating: values.rating,
           comment: values.comment,
-        }
+        },
       );
 
       toast("Feedback submitted", {

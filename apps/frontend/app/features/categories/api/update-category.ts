@@ -10,11 +10,11 @@ export type UpdateCategoryValues = z.infer<typeof updateCategorySchema>;
 
 export default async function updateCategory(
   id: string,
-  values: UpdateCategoryValues
+  values: UpdateCategoryValues,
 ) {
   const { data } = await api.put<ApiResponse<string>>(
     "/categories/" + id,
-    values
+    values,
   );
 
   if (data.status === "error") {

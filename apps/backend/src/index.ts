@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== "production") {
           ],
         },
       },
-    })
+    }),
   );
 } else {
   app.use(helmet());
@@ -48,7 +48,7 @@ app.use(
     stream: {
       write: (message) => logger.info(message.trim()), // Redirect Morgan logs to Winston
     },
-  })
+  }),
 );
 
 app.use("/api", routes);
@@ -63,7 +63,7 @@ if (process.env.NODE_ENV !== "production") {
     apiReference({
       // Put your OpenAPI url here:
       url: "/api/docs",
-    })
+    }),
   );
 }
 

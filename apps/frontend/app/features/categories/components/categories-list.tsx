@@ -32,7 +32,7 @@ export function CategoryList({ categories }: CategoryListProps) {
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
-    null
+    null,
   );
 
   const handleDelete = async () => {

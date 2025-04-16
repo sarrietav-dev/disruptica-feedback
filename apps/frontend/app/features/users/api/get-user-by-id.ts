@@ -4,7 +4,7 @@ import { err, ok, type Result } from "~/lib/result";
 import { api } from "~/lib/api-client";
 
 export default async function getUserById(
-  id: string
+  id: string,
 ): Promise<Result<User, string>> {
   try {
     const { data } = await api.get(`/users/${id}`);

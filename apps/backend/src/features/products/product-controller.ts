@@ -6,7 +6,7 @@ import { Product } from "./product-model";
 export class ProductController {
   async createProduct(
     name: string,
-    categoryId: string
+    categoryId: string,
   ): Promise<Result<string, string>> {
     try {
       const result = await db.insert(products).values({
@@ -47,7 +47,7 @@ export class ProductController {
   }
 
   async getProductById(
-    productId: string
+    productId: string,
   ): Promise<
     Result<
       Omit<Product, "updatedAt" | "createdAt"> & { feedbackAvg: string | null },
@@ -80,7 +80,7 @@ export class ProductController {
 
   async updateProduct(
     productId: string,
-    data: { name?: string; description?: string; price?: number }
+    data: { name?: string; description?: string; price?: number },
   ): Promise<Result<Product, string>> {
     try {
       const result = await db

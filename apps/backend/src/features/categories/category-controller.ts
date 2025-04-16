@@ -40,7 +40,7 @@ export class CategoryController {
 
   async updateCategory(
     categoryId: string,
-    data: { name?: string; description?: string }
+    data: { name?: string; description?: string },
   ): Promise<Result<string, string>> {
     try {
       const result = await db

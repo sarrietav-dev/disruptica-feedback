@@ -50,7 +50,7 @@ export default function FeedbackForm({ productId }: FeedbackFormProps) {
       const response = await createFeedback(
         productId,
         "4d4e11ad-aa35-43b8-a0d7-b51163025112",
-        values
+        values,
       );
 
       if (isErr(response)) {
